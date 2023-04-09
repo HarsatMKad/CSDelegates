@@ -23,6 +23,62 @@ namespace ConsoleApp1
 
     public int[,] Matrix = new int[100, 100];
 
+    public delegate SquareMatrix Diagonalization(SquareMatrix Matrix);
+    public Diagonalization ToDiagonal = delegate (SquareMatrix Matrix)
+    {
+      SquareMatrix Result = Matrix;
+
+      for (int mainE = 0; mainE < Result.Dimension; ++mainE)
+      {
+        for (int i = 0; i < Matrix.Dimension; ++i)
+        {
+          if (i != mainE)
+          {
+            for (int j = 0; j < Matrix.Dimension; ++j)
+            {
+              if (j != mainE)
+              {
+                Result.Matrix[i, j] = (Result.Matrix[i, j] * Result.Matrix[mainE, mainE]) - (Result.Matrix[i, mainE] * Result.Matrix[mainE, j]);
+              }
+            }
+          }
+        }
+
+        for (int i = 0; i < Matrix.Dimension; ++i)
+        {
+          if (i != mainE)
+          {
+            Result.Matrix[mainE, i] = 0;
+          }
+        }
+      }
+
+      for (int d = 0; d < Result.Dimension; ++d)
+      {
+        if (Result.Matrix[d, d] == 0)
+        {
+          return Result;
+        }
+      }
+
+      bool key = true;
+      for (int d = 0; d < Result.Dimension; ++d)
+      {
+        if (Result.Matrix[d, d] % Result.Matrix[Result.Dimension - 1, Result.Dimension - 1] != 0)
+        {
+          key = false;
+        }
+      }
+      if (key = true)
+      {
+        for (int d = 0; d < Result.Dimension; ++d)
+        {
+          Result.Matrix[d, d] = Result.Matrix[d, d] / Result.Matrix[Result.Dimension - 1, Result.Dimension - 1];
+        }
+      }
+      return Result;
+    };
+
     public void CreateMatrix()
     {
       Random RandomNumber = new Random();
@@ -265,7 +321,7 @@ namespace ConsoleApp1
     public SquareMatrix Transposition(SquareMatrix Matrix)
     {
       SquareMatrix Result = new SquareMatrix(Matrix.Dimension);
-      
+
       for (int RowIndex = 0; RowIndex < Matrix.Dimension; ++RowIndex)
       {
         for (int ClolumnIndex = 0; ClolumnIndex < Matrix.Dimension; ++ClolumnIndex)
@@ -273,7 +329,6 @@ namespace ConsoleApp1
           Result.Matrix[RowIndex, ClolumnIndex] = Matrix.Matrix[ClolumnIndex, RowIndex];
         }
       }
-    
       return Result;
     }
 
@@ -281,14 +336,13 @@ namespace ConsoleApp1
     {
       int Trace = 0;
 
-      for(int RowIndex = 0; RowIndex < Matrix.Dimension; ++RowIndex)
+      for (int RowIndex = 0; RowIndex < Matrix.Dimension; ++RowIndex)
       {
         Trace += Matrix.Matrix[RowIndex, RowIndex];
       }
 
       return Trace;
     }
-
 
     public void Display()
     {
@@ -302,6 +356,7 @@ namespace ConsoleApp1
       }
     }
   }
+
   public class InvalidMatrixException : System.Exception
   {
     public InvalidMatrixException(string WrongDimension)
@@ -455,6 +510,11 @@ namespace ConsoleApp1
 
         case "trace":
           Console.WriteLine(matrix1.Trace(matrix1));
+          break;
+
+        case "1":
+          SquareMatrix Result = matrix1.ToDiagonal(matrix1);
+          Result.Display();
           break;
 
         default:
