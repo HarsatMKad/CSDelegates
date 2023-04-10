@@ -409,7 +409,9 @@ namespace ConsoleApp1
       matrix2.CreateMatrix();
       matrix2.Display();
 
-      Console.WriteLine("+, *, determ, invers, >, <, >=, <=, ==, !=, true, false, equals, hash, string, compare, transpos, trace");
+      Console.WriteLine(" +, *, determ, invers, >, <, >=, <=, ==, !=, ");
+      Console.WriteLine(" true, false, equals, hash, string, compar,");
+      Console.WriteLine(" transpos, trace, diagonal, test");
       Console.WriteLine("какую операцию необходимо выполнить: ");
       Operation = Convert.ToString(Console.ReadLine());
 
