@@ -28,52 +28,52 @@ namespace ConsoleApp1
     {
       SquareMatrix Result = Matrix;
 
-      for (int mainE = 0; mainE < Result.Dimension; ++mainE)
+      for (int LeadingElement = 0; LeadingElement < Result.Dimension; ++LeadingElement)
       {
-        for (int i = 0; i < Matrix.Dimension; ++i)
+        for (int RowIndex = 0; RowIndex < Matrix.Dimension; ++RowIndex)
         {
-          if (i != mainE)
+          if (RowIndex != LeadingElement)
           {
-            for (int j = 0; j < Matrix.Dimension; ++j)
+            for (int ClolumnIndex = 0; ClolumnIndex < Matrix.Dimension; ++ClolumnIndex)
             {
-              if (j != mainE)
+              if (ClolumnIndex != LeadingElement)
               {
-                Result.Matrix[i, j] = (Result.Matrix[i, j] * Result.Matrix[mainE, mainE]) - (Result.Matrix[i, mainE] * Result.Matrix[mainE, j]);
+                Result.Matrix[RowIndex, ClolumnIndex] = (Result.Matrix[RowIndex, ClolumnIndex] * Result.Matrix[LeadingElement, LeadingElement]) - (Result.Matrix[RowIndex, LeadingElement] * Result.Matrix[LeadingElement, ClolumnIndex]);
               }
             }
           }
         }
 
-        for (int i = 0; i < Matrix.Dimension; ++i)
+        for (int RowIndex = 0; RowIndex < Matrix.Dimension; ++RowIndex)
         {
-          if (i != mainE)
+          if (RowIndex != LeadingElement)
           {
-            Result.Matrix[mainE, i] = 0;
+            Result.Matrix[LeadingElement, RowIndex] = 0;
           }
         }
       }
 
-      for (int d = 0; d < Result.Dimension; ++d)
+      for (int DiagonalIndex = 0; DiagonalIndex < Result.Dimension; ++DiagonalIndex)
       {
-        if (Result.Matrix[d, d] == 0)
+        if (Result.Matrix[DiagonalIndex, DiagonalIndex] == 0)
         {
           return Result;
         }
       }
 
-      bool key = true;
-      for (int d = 0; d < Result.Dimension; ++d)
+      bool Key = true;
+      for (int DiagonalIndex = 0; DiagonalIndex < Result.Dimension; ++DiagonalIndex)
       {
-        if (Result.Matrix[d, d] % Result.Matrix[Result.Dimension - 1, Result.Dimension - 1] != 0)
+        if (Result.Matrix[DiagonalIndex, DiagonalIndex] % Result.Matrix[Result.Dimension - 1, Result.Dimension - 1] != 0)
         {
-          key = false;
+          Key = false;
         }
       }
-      if (key = true)
+      if (Key = true)
       {
-        for (int d = 0; d < Result.Dimension; ++d)
+        for (int DiagonalIndex = 0; DiagonalIndex < Result.Dimension; ++DiagonalIndex)
         {
-          Result.Matrix[d, d] = Result.Matrix[d, d] / Result.Matrix[Result.Dimension - 1, Result.Dimension - 1];
+          Result.Matrix[DiagonalIndex, DiagonalIndex] = Result.Matrix[DiagonalIndex, DiagonalIndex] / Result.Matrix[Result.Dimension - 1, Result.Dimension - 1];
         }
       }
       return Result;
@@ -512,9 +512,18 @@ namespace ConsoleApp1
           Console.WriteLine(matrix1.Trace(matrix1));
           break;
 
-        case "1":
+        case "diagonal":
           SquareMatrix Result = matrix1.ToDiagonal(matrix1);
           Result.Display();
+          break;
+
+        case "test":
+          ChainOfResponsibility.Handler handler1 = new ChainOfResponsibility.Multiplication();
+          ChainOfResponsibility.Handler handler2 = new ChainOfResponsibility.Addition();
+          ChainOfResponsibility.Handler hadnler3 = new ChainOfResponsibility.Diagonalization();
+          handler1.Successor = handler2;
+          handler2.Successor = hadnler3;
+          handler1.HandleRequest(3, matrix1, matrix2);
           break;
 
         default:
